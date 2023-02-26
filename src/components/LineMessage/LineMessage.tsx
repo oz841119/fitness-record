@@ -1,22 +1,22 @@
-import axios from "axios"
-import React, { useEffect, useState } from "react"
+import { ReactNode } from "react"
 
+interface Message {
+  _id: string
+  date: string
+  line_user_id: string
+  message: string
+}
+interface Props {
+  messageList: Message[]
+}
 
-const LineMessageList:React.FC = () => {
-    const [mesList, setMesList] = useState([])
-    const mesListNode = mesList.map(({date, message}, index) => (
-        <div key={index}>{message}</div>
-    ))
-    useEffect(() => {
-        axios.get('https://fr-linebot.onrender.com/get_message').then(res => {
-            console.log(res.data);
-            setMesList(res.data)
-        })
-    })
+const LineMessageList:React.FC<Props> = (props) => {
+  const MessageListNode:ReactNode = props.messageList.map(e => (<div key={e._id}>{e._id} | {e.date} | {e.line_user_id} | {e.message}</div>
+  ))
     return (
         <>
             <div>
-                {mesListNode}
+                {MessageListNode}
             </div>
         </>
     )
