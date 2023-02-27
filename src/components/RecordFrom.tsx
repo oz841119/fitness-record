@@ -6,7 +6,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Backdrop } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { useState, ReactNode, useEffect, ChangeEvent, SetStateAction } from 'react';
+import axios from 'axios';
 
 const RecordForm:React.FC = () => {
 	const [actionForm, setActionForm] = useState<ActionForm[]>([{date: '', action: '', weight: '', times: ''}])
@@ -21,7 +24,6 @@ const RecordForm:React.FC = () => {
 	const submit = () => {
 		if(isNaN(Number(actionForm[0].weight))) return
 		if(isNaN(Number(actionForm[0].times))) return
-		console.log(123);
 		setIsDialog(true)
 	}
 	const BoxNode = actionForm.map((e, index) => (
@@ -34,7 +36,6 @@ const RecordForm:React.FC = () => {
 			<Button size="small" variant="outlined" onClick={copyForm}>複製一份</Button>
 		</Box>
 	))
-
 	const [isDialog, setIsDialog] = useState<boolean>(false)
 	const [userLineIdInpValue, setUserLineIdInpValue] = useState('')
 	const changeUserLineIdInpValue = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -43,6 +44,28 @@ const RecordForm:React.FC = () => {
 	const handleClose = () => {
 		setIsDialog(false)
 	}
+    const [isLoading, setIsLoading] = useState(false)
+    const postRecord = () => {
+        const apiUrl = 'https://fr-linebot.onrender.com/add_action_record'
+        const config = {
+            headers: {
+                authorization: userLineIdInpValue
+            }
+        }
+        const params:ActionForm = {
+            date: actionForm[0].date,
+            weight: actionForm[0].weight,
+            action: actionForm[0].action,
+            times: actionForm[0].times
+        }
+        setIsLoading(true)
+        axios.post(apiUrl, params, config).then((res) => {
+            handleClose()
+            // window.localStorage.set('userLineId', userLineIdInpValue)
+            console.log(res.data);
+            setIsLoading(false)
+        })
+    }
 	const DialogNode = (
 		<Dialog open={isDialog}>
 			<DialogTitle>輸入Line User ID</DialogTitle>
@@ -51,7 +74,7 @@ const RecordForm:React.FC = () => {
 			</DialogContent>
 			<DialogActions>
 				<Button onClick={handleClose}>取消</Button>
-				<Button onClick={handleClose}>提交</Button>
+				<Button onClick={postRecord}>提交</Button>
 			</DialogActions>
 		</Dialog>
 	) 
@@ -60,6 +83,9 @@ const RecordForm:React.FC = () => {
 			{BoxNode}
 			<Button variant="contained" onClick={submit}>送出</Button>
 			{DialogNode}
+            <Backdrop open={isLoading} sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
 		</div>
 	)
 }
