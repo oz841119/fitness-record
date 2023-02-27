@@ -1,29 +1,14 @@
 import { Inter } from 'next/font/google'
-import axios from "axios"
-import LineMessage from '@/components/LineMessage/LineMessage'
-import { GetServerSideProps } from 'next';
 const inter = Inter({ subsets: ['latin'] })
 
-interface Message {
-  _id: string
-  date: string
-  line_user_id: string
-  message: string
-}
+import LineMessageTable from '../components/LineMessageTable'
+import RecordFrom from '../components/RecordFrom'
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const messageResponse = await axios.get('https://fr-linebot.onrender.com/get_message')
-  const data = messageResponse.data
-  return {
-    props: {messageList: data}, // will be passed to the page component as props
-  }
-}
-
-
-export default function Home(props: { messageList: Message[] }) {
+export default function Home(props: { messageList: LineMessage[] }) {
   return (
     <>
-      <LineMessage messageList={props.messageList}/>
+      <RecordFrom></RecordFrom>
+      {/* <LineMessageTable></LineMessageTable> */}
     </>
   )
 }
