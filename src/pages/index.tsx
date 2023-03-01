@@ -8,7 +8,7 @@ export default function Home(props: { messageList: LineMessage[] }) {
   return (
     <>
       <RecordFrom></RecordFrom>
-      {/* <LineMessageTable></LineMessageTable> */}
+      <LineMessageTable></LineMessageTable>
     </>
   )
 }

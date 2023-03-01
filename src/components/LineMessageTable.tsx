@@ -10,18 +10,17 @@ import axios from 'axios';
 
 
 const LineMessageTable:React.FC = () => {
-    const ONCE: [] = []
     const [rows, setRows] = useState<LineMessage[]>([])
     useEffect(() => {
-        axios.get('https://fr-linebot.onrender.com/get_message')
+        axios.get('https://fr-linebot.onrender.com/get_user_message', {headers: {authorization: 'U0a709fc00747940211447784613e7de3'}})
             .then(res => {
                 console.log('Get data of line message list');
-                const mesList: LineMessage[] = res.data
+                const mesList: LineMessage[] = res.data.reverse()
                 setRows(mesList)
                 console.log('Render data of line message list');
-                
             })
-    }, ONCE)
+        return 
+    }, [])
     
     const TableBodyRows = rows.map(mes => (
         <TableRow key={mes._id}>
