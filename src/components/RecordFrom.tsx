@@ -8,8 +8,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Backdrop } from '@mui/material';
 import { CircularProgress } from '@mui/material';
-import { useState, ReactNode, useEffect, ChangeEvent, SetStateAction } from 'react';
+import { useState, ReactNode, useEffect, ChangeEvent, SetStateAction, useContext } from 'react';
 import axios from 'axios';
+import { MyAppContext } from '@/pages/_app';
 
 const RecordForm:React.FC = () => {
 	const [actionForm, setActionForm] = useState<ActionForm[]>([{date: '', action: '', weight: '', times: ''}])
@@ -36,8 +37,12 @@ const RecordForm:React.FC = () => {
 			<Button size="small" variant="outlined" onClick={copyForm}>複製一份</Button>
 		</Box>
 	))
+	const {lineUserId} = useContext(MyAppContext)
 	const [isDialog, setIsDialog] = useState<boolean>(false)
-	const [userLineIdInpValue, setUserLineIdInpValue] = useState('')
+	const [userLineIdInpValue, setUserLineIdInpValue] = useState<string | null>('')
+	useEffect(() => {
+		setUserLineIdInpValue(lineUserId)
+	}, [lineUserId])
 	const changeUserLineIdInpValue = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setUserLineIdInpValue(event.target.value)
 	}
@@ -52,17 +57,10 @@ const RecordForm:React.FC = () => {
                 authorization: userLineIdInpValue
             }
         }
-        const params:ActionForm = {
-            date: actionForm[0].date,
-            weight: actionForm[0].weight,
-            action: actionForm[0].action,
-            times: actionForm[0].times
-        }
         setIsLoading(true)
-        axios.post(apiUrl, params, config).then((res) => {
+        axios.post(apiUrl, actionForm, config).then((res) => {
             handleClose()
             // window.localStorage.set('userLineId', userLineIdInpValue)
-            console.log(res.data);
             setIsLoading(false)
         })
     }
@@ -80,6 +78,7 @@ const RecordForm:React.FC = () => {
 	) 
 	return (
 		<div>
+			<div>登入ID: {lineUserId}</div>
 			{BoxNode}
 			<Button variant="contained" onClick={submit}>送出</Button>
 			{DialogNode}
