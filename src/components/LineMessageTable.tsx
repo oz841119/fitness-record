@@ -12,7 +12,9 @@ import axios from 'axios';
 const LineMessageTable:React.FC = () => {
     const [rows, setRows] = useState<LineMessage[]>([])
     useEffect(() => {
-        axios.get('https://fr-linebot.onrender.com/get_user_message', {headers: {authorization: 'U0a709fc00747940211447784613e7de3'}})
+        const lineUserId = window.localStorage.getItem('lineUserId')
+        if(!lineUserId) return
+        axios.get('https://fr-linebot.onrender.com/get_user_message', {headers: {authorization: lineUserId}})
             .then(res => {
                 console.log('Get data of line message list');
                 const mesList: LineMessage[] = res.data.reverse()
@@ -22,14 +24,21 @@ const LineMessageTable:React.FC = () => {
         return 
     }, [])
     
-    const TableBodyRows = rows.map(mes => (
-        <TableRow key={mes._id}>
-            <TableCell>{mes._id}</TableCell>
-            <TableCell>{mes.line_user_id}</TableCell>
-            <TableCell>{mes.date}</TableCell>
-            <TableCell>{mes.message}</TableCell>
-        </TableRow>
-    ))
+    const TableBodyRows = rows.length > 0 ? 
+        rows.map(mes => (
+            <TableRow key={mes._id}>
+                <TableCell>{mes._id}</TableCell>
+                <TableCell>{mes.line_user_id}</TableCell>
+                <TableCell>{mes.date}</TableCell>
+                <TableCell>{mes.message}</TableCell>
+            </TableRow>)
+        ) : (
+            <TableRow>
+                <TableCell align="center" colSpan={4}>
+                暫無數據，請檢查登入或是否有紀錄
+                </TableCell>
+            </TableRow>
+        )
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

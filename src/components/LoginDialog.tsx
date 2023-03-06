@@ -13,6 +13,7 @@ export default function LoginDialog() {
     const login = () => {
         window.localStorage.setItem('lineUserId', userId)
         handleClose()
+        location.reload()
     }
     return (
         <Dialog open={open} onClose={handleClose}>
