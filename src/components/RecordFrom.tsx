@@ -78,7 +78,6 @@ const RecordForm:React.FC = () => {
 	) 
 	return (
 		<div>
-			<div>登入ID: {lineUserId}</div>
 			{BoxNode}
 			<Button variant="contained" onClick={submit}>送出</Button>
 			{DialogNode}
