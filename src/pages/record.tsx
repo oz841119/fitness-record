@@ -20,7 +20,8 @@ interface record {
 export default function Record() {
 	const [recordList, setRecordList] = useState([])
 	useEffect(() => {
-		axios.get('https://fr-linebot.onrender.com/get_action_record', {headers: {authorization: window.localStorage.getItem('lineUserId')}})
+		const API_URL = process.env.NEXT_PUBLIC_API_PATH + '/action_record'
+		axios.get(API_URL, {headers: {authorization: window.localStorage.getItem('lineUserId')}})
 			.then(res => {
 				setRecordList(res.data)
 			})

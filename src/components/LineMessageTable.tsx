@@ -13,8 +13,9 @@ const LineMessageTable:React.FC = () => {
     const [rows, setRows] = useState<LineMessage[]>([])
     useEffect(() => {
         const lineUserId = window.localStorage.getItem('lineUserId')
-        if(!lineUserId) return
-        axios.get('https://fr-linebot.onrender.com/get_user_message', {headers: {authorization: lineUserId}})
+        if(!lineUserId) return        
+        const API_URL = process.env.NEXT_PUBLIC_API_PATH + '/line_message'
+        axios.get(API_URL, {headers: {authorization: lineUserId}})
             .then(res => {
                 console.log('Get data of line message list');
                 const mesList: LineMessage[] = res.data.reverse()

@@ -51,14 +51,14 @@ const RecordForm:React.FC = () => {
 	}
     const [isLoading, setIsLoading] = useState(false)
     const postRecord = () => {
-        const apiUrl = 'https://fr-linebot.onrender.com/add_action_record'
+		const API_URL = process.env.NEXT_PUBLIC_API_PATH + '/action_record'
         const config = {
             headers: {
                 authorization: userLineIdInpValue
             }
         }
         setIsLoading(true)
-        axios.post(apiUrl, actionForm, config).then((res) => {
+        axios.post(API_URL, actionForm, config).then((res) => {
             handleClose()
             // window.localStorage.set('userLineId', userLineIdInpValue)
             setIsLoading(false)
