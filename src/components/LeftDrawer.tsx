@@ -21,6 +21,9 @@ export default function LeftDrawer(props: LeftDrawerProps) {
             <Button>
                 <Link href="/record">Record</Link>
             </Button>
+            <Button>
+                <Link href="/tags-manager">動作管理</Link>
+            </Button>
         </Drawer>
 
     )
