@@ -1,0 +1,12 @@
+.title {
+    padding: 18px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.alias {
+    font-size: 12px;
+    text-align: center;
+    font-weight: 700;
+}

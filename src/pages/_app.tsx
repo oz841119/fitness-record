@@ -3,30 +3,44 @@ import { useEffect, useState, createContext} from 'react'
 import LoginDialog from '../components/LoginDialog'
 import Layout from '../components/Layout'
 import '../styles/global.css'
+import axios from 'axios'
 interface IMyAppState {
   lineUserId: string | null;
   setLineUserId: React.Dispatch<React.SetStateAction<string | null>>;
+  userAlias: string | null,
+  setUserAlias: React.Dispatch<React.SetStateAction<string | null>>;
 }
 export const MyAppContext = createContext<IMyAppState>({
   lineUserId: null,
-  setLineUserId: () => {}
+  setLineUserId: () => {},
+  userAlias: null,
+  setUserAlias: () => {},
 });
 
 function MyApp({ Component }: AppProps) {
   const [lineUserId, setLineUserId] = useState<string | null>(null)
+  const [userAlias, setUserAlias] = useState<string | null>(null)
   useEffect(() => {
-    setLineUserId(window.localStorage.getItem('lineUserId'))
-  }, [])
+    const tempLineUserId = window.localStorage.getItem('lineUserId')
+    setLineUserId(tempLineUserId)
+    if(tempLineUserId) {
+      const API_URL = process.env.NEXT_PUBLIC_API_PATH + '/user_alias'
+      axios.post(API_URL, null, {headers: {authorization: window.localStorage.getItem('lineUserId')}})
+        .then(res => {
+          setUserAlias(res.data)
+        })
+    }
+  }, [])  
 
   // 渲染當前頁面
   return (
-    <MyAppContext.Provider value={{lineUserId, setLineUserId}}>
+    <MyAppContext.Provider value={{lineUserId, setLineUserId, userAlias, setUserAlias}}>
       <Layout>
         {lineUserId ? null : <LoginDialog></LoginDialog>}
         <Component/>
       </Layout>
     </MyAppContext.Provider>
-  )
+  ) 
 }
 
 export default MyApp
