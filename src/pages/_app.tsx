@@ -4,6 +4,13 @@ import LoginDialog from '../components/LoginDialog'
 import Layout from '../components/Layout'
 import '../styles/global.css'
 import axios from 'axios'
+
+axios.interceptors.request.use(config => {
+  const lineUserId = window.localStorage.getItem('lineUserId')
+  config.headers.Authorization = lineUserId
+  return config;
+})
+
 interface IMyAppState {
   lineUserId: string | null;
   setLineUserId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -25,7 +32,7 @@ function MyApp({ Component }: AppProps) {
     setLineUserId(tempLineUserId)
     if(tempLineUserId) {
       const API_URL = process.env.NEXT_PUBLIC_API_PATH + '/user_alias'
-      axios.post(API_URL, null, {headers: {authorization: window.localStorage.getItem('lineUserId')}})
+      axios.post(API_URL)
         .then(res => {
           setUserAlias(res.data)
         })

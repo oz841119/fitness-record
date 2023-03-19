@@ -7,7 +7,7 @@ export default function TagsManager() {
     const getTags = (): Promise<string[]> => {
         return new Promise(resolve => {
             const API_URL = process.env.NEXT_PUBLIC_API_PATH + '/action_tags'
-            axios.get(API_URL, {headers: {authorization: window.localStorage.getItem('lineUserId')}})
+            axios.get(API_URL)
                 .then(res => {
                     resolve(res.data)
                 })

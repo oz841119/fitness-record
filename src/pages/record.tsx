@@ -21,7 +21,7 @@ export default function Record() {
 	const [recordList, setRecordList] = useState([])
 	useEffect(() => {
 		const API_URL = process.env.NEXT_PUBLIC_API_PATH + '/action_record'
-		axios.get(API_URL, {headers: {authorization: window.localStorage.getItem('lineUserId')}})
+		axios.get(API_URL)
 			.then(res => {
 				setRecordList(res.data)
 			})
